@@ -9,6 +9,7 @@
         UAT,
         LPT,
         PRO,
-        TOOLS
+        TOOLS,
+        TEST
     }
 }

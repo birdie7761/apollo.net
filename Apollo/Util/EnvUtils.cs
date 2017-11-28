@@ -27,6 +27,8 @@ namespace Com.Ctrip.Framework.Apollo.Util
                     return Env.DEV;
                 case "LOCAL":
                     return Env.LOCAL;
+                case "TEST":
+                    return Env.TEST;
                 default:
                     //handle ctrip subenv such as fat44 from ReleaseInfo
                     if (tempEnvName.Contains("FAT") || tempEnvName.Contains("FWS"))

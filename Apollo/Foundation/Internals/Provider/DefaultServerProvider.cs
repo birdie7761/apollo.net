@@ -3,6 +3,7 @@ using Com.Ctrip.Framework.Apollo.Logging.Spi;
 using Com.Ctrip.Framework.Foundation.Spi.Provider;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 
 namespace Com.Ctrip.Framework.Foundation.Internals.Provider
@@ -133,6 +134,19 @@ namespace Com.Ctrip.Framework.Foundation.Internals.Provider
 
             // 2. Read from server.properties
             serverProperties.TryGetValue("env", out env);
+            if (!String.IsNullOrWhiteSpace(env))
+            {
+                env = env.Trim();
+                logger.Info("EnvType is set to [" + env + "] by 'env' property from server.properties");
+                return;
+            }
+            else
+            {
+                logger.Info("EnvType is not available from 'env' property of server.properties.");
+            }
+
+            // 3. Read from app.config
+            env = ConfigurationManager.AppSettings["Apollo.Env"];
             if (!String.IsNullOrWhiteSpace(env))
             {
                 env = env.Trim();

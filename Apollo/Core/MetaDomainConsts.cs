@@ -16,6 +16,8 @@ namespace Com.Ctrip.Framework.Apollo.Core
             {
                 case Env.DEV:
                     return GetAppSetting("Apollo.DEV.Meta", DEFAULT_META_URL);
+                case Env.TEST:
+                    return GetAppSetting("Apollo.TEST.Meta", DEFAULT_META_URL);
                 case Env.FAT:
                     return GetAppSetting("Apollo.FAT.Meta", DEFAULT_META_URL);
                 case Env.UAT:
