@@ -83,12 +83,20 @@ namespace Com.Ctrip.Framework.Apollo
                 {
                     try
                     {
-                        var temp = ValueType == ApolloValueTypes.JSON ? JsonConvert.DeserializeObject<T>(Source) as object : Source as object;
-                        if (temp == null)
+                        if (Source != null)
                         {
-                            return default(T);
+                            var temp = ValueType == ApolloValueTypes.JSON ? JsonConvert.DeserializeObject<T>(Source) as object : Source as object;
+                            if (temp == null)
+                            {
+                                return default(T);
+                            }
+                            Interlocked.Exchange<Object>(ref _Value, temp);
                         }
-                        Interlocked.Exchange<Object>(ref _Value, temp);
+                        else
+                        {
+                            _Value = null;
+                        }
+
                         Modified = false;
                     }
                     catch (Exception e)
