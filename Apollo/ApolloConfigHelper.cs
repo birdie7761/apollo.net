@@ -44,18 +44,27 @@ namespace Com.Ctrip.Framework.Apollo
             changeEvent.ChangedKeys.ToList().ForEach(a =>
             {
                 var change = changeEvent.GetChange(a);
-  
-                if (change.ChangeType == PropertyChangeType.MODIFIED)
+                switch (change.ChangeType)
                 {
-                    if (cache.ContainsKey(a))
-                    {
-                        var c = cache[a];
-                        c.Modify(change.NewValue);
+                    case PropertyChangeType.ADDED:
+                    case PropertyChangeType.MODIFIED:
+                        if (cache.ContainsKey(a))
+                        {
+                            var c = cache[a];
+                            c.Modify(change.NewValue);
+                            return;
+                        }
+                        var Item = new CacheItem();
+                        Item.Modify(change.NewValue);
+                        cache.AddOrUpdate(a, Item, (k, oldValue) => Item);
                         return;
-                    }
-                    var Item = new CacheItem();
-                    Item.Modify(change.NewValue);
-                    cache.AddOrUpdate(a, Item, (k, oldValue) => Item);
+                    case PropertyChangeType.DELETED:
+                        CacheItem RemoveItem;
+                        if (cache.ContainsKey(a))
+                        {
+                            cache.TryRemove(a, out RemoveItem);
+                        }
+                        return;
                 }
             });
         }

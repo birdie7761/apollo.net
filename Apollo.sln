@@ -1,6 +1,8 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApolloDemo", "ApolloDemo\ApolloDemo.csproj", "{D78C920D-C96B-4973-BBC8-35E5DB54DF2A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apollo", "Apollo\Apollo.csproj", "{B231A39E-9D8A-4F63-9DFF-4FB7B5A900AB}"
@@ -16,6 +18,7 @@ Global
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{D78C920D-C96B-4973-BBC8-35E5DB54DF2A}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{D78C920D-C96B-4973-BBC8-35E5DB54DF2A}.Debug|Any CPU.Build.0 = Debug|x86
 		{D78C920D-C96B-4973-BBC8-35E5DB54DF2A}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
 		{D78C920D-C96B-4973-BBC8-35E5DB54DF2A}.Debug|Mixed Platforms.Build.0 = Debug|x86
 		{D78C920D-C96B-4973-BBC8-35E5DB54DF2A}.Debug|x86.ActiveCfg = Debug|x86
@@ -38,5 +41,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B10BCDC0-6B00-4824-9292-D61130569DDD}
 	EndGlobalSection
 EndGlobal
