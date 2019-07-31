@@ -1,39 +1,23 @@
-﻿using Com.Ctrip.Framework.Apollo.Core.Ioc;
+﻿using System.Threading.Tasks;
 using Com.Ctrip.Framework.Apollo.Internals;
-using Com.Ctrip.Framework.Apollo.Logging;
-using Com.Ctrip.Framework.Apollo.Logging.Spi;
-using Com.Ctrip.Framework.Apollo.Util;
-using System;
 
 namespace Com.Ctrip.Framework.Apollo.Spi
 {
-    [Named(ServiceType = typeof(ConfigFactory))]
-    class DefaultConfigFactory : ConfigFactory
+    public class DefaultConfigFactory : IConfigFactory
     {
-        private static readonly ILog logger = LogManager.GetLogger(typeof(DefaultConfigFactory));
-        [Inject]
-        private ConfigUtil m_configUtil;
+        private readonly ConfigRepositoryFactory _repositoryFactory;
 
-        public Config Create(string namespaceName)
-        {
-            DefaultConfig defaultConfig = new DefaultConfig(namespaceName, CreateLocalConfigRepository(namespaceName));
-            return defaultConfig;
-        }
+        public DefaultConfigFactory(ConfigRepositoryFactory repositoryFactory) => _repositoryFactory = repositoryFactory;
 
-        LocalFileConfigRepository CreateLocalConfigRepository(string namespaceName)
+        public async Task<IConfig> Create(string namespaceName)
         {
-            if (m_configUtil.InLocalMode)
-            {
-                Console.WriteLine(
-                    string.Format("==== Apollo is in local mode! Won't pull configs from remote server for namespace {0} ! ====", namespaceName));
-                return new LocalFileConfigRepository(namespaceName);
-            }
-            return new LocalFileConfigRepository(namespaceName, CreateRemoteConfigRepository(namespaceName));
-        }
+            var configRepository = _repositoryFactory.GetConfigRepository(namespaceName);
 
-        RemoteConfigRepository CreateRemoteConfigRepository(string namespaceName)
-        {
-            return new RemoteConfigRepository(namespaceName);
+            var config = new DefaultConfig(namespaceName, configRepository);
+
+            await config.Initialize().ConfigureAwait(false);
+
+            return config;
         }
     }
 }

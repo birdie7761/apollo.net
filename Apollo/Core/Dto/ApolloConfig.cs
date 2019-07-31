@@ -4,94 +4,16 @@ namespace Com.Ctrip.Framework.Apollo.Core.Dto
 {
     public class ApolloConfig
     {
-        private string appId;
+        public string AppId { get; set; }
 
-        private string cluster;
+        public string Cluster { get; set; }
 
-        private string namespaceName;
+        public string NamespaceName { get; set; }
 
-        private IDictionary<string, string> configurations;
+        public string ReleaseKey { get; set; }
 
-        private string releaseKey;
+        public IDictionary<string, string> Configurations { get; set; }
 
-        public ApolloConfig()
-        {
-        }
-
-        public ApolloConfig(string appId, string cluster, string namespaceName, string releaseKey)
-        {
-            this.appId = appId;
-            this.cluster = cluster;
-            this.namespaceName = namespaceName;
-            this.releaseKey = releaseKey;
-        }
-
-        public string AppId
-        {
-            get
-            {
-                return appId;
-            }
-            set
-            {
-                this.appId = value;
-            }
-        }
-
-        public string Cluster
-        {
-            get
-            {
-                return cluster;
-            }
-            set
-            {
-                this.cluster = value;
-            }
-        }
-
-        public string NamespaceName
-        {
-            get
-            {
-                return namespaceName;
-            }
-            set
-            {
-                this.namespaceName = value;
-            }
-        }
-
-        public string ReleaseKey
-        {
-            get
-            {
-                return releaseKey;
-            }
-            set
-            {
-                this.releaseKey = value;
-            }
-        }
-
-        public IDictionary<string, string> Configurations
-        {
-            get
-            {
-                return configurations;
-            }
-            set
-            {
-                this.configurations = value;
-            }
-        }
-
-        public override string ToString()
-        {
-            return "ApolloConfig{" + "appId='" + appId + '\'' + ", cluster='" + cluster + '\'' + 
-                ", namespaceName='" + namespaceName + '\'' + ", configurations=" + configurations + 
-                ", releaseKey='" + releaseKey + '\'' + '}';
-        }
-
+        public override string ToString() => $"ApolloConfig{{appId='{AppId}{'\''}, cluster='{Cluster}{'\''}, namespaceName='{NamespaceName}{'\''}, configurations={Configurations}, releaseKey='{ReleaseKey}{'\''}{'}'}";
     }
 }

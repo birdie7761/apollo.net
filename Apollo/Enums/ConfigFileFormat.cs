@@ -2,7 +2,7 @@
 {
     public enum ConfigFileFormat
     {
-        Properties, XML
+        Properties, Xml, Json, Yml, Yaml, Txt
     }
 
     static class ConfigFileFormatMethods
@@ -13,8 +13,16 @@
             {
                 case ConfigFileFormat.Properties:
                     return "properties";
-                case ConfigFileFormat.XML:
+                case ConfigFileFormat.Xml:
                     return "xml";
+                case ConfigFileFormat.Json:
+                    return "json";
+                case ConfigFileFormat.Yml:
+                    return "yml";
+                case ConfigFileFormat.Yaml:
+                    return "yaml";
+                case ConfigFileFormat.Txt:
+                    return "txt";
                 default:
                     return "unknown";
             }

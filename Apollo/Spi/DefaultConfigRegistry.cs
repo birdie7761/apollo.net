@@ -1,32 +1,29 @@
-﻿using Com.Ctrip.Framework.Apollo.Core.Ioc;
-using Com.Ctrip.Framework.Apollo.Logging;
-using Com.Ctrip.Framework.Apollo.Logging.Spi;
+﻿using Com.Ctrip.Framework.Apollo.Logging;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 
 namespace Com.Ctrip.Framework.Apollo.Spi
 {
-    [Named(ServiceType = typeof(ConfigRegistry))]
-    class DefaultConfigRegistry : ConfigRegistry
+    public class DefaultConfigRegistry : IConfigRegistry
     {
-        private static readonly ILog logger = LogManager.GetLogger(typeof(DefaultConfigRegistry));
-        private IDictionary<string, ConfigFactory> m_instances = new ConcurrentDictionary<string, ConfigFactory>();
+        private static readonly Func<Action<LogLevel, string, Exception>> Logger = () => LogManager.CreateLogger(typeof(DefaultConfigRegistry));
+        private readonly IDictionary<string, IConfigFactory> _instances = new ConcurrentDictionary<string, IConfigFactory>();
 
-        public void Register(string namespaceName, ConfigFactory factory)
+        public void Register(string namespaceName, IConfigFactory factory)
         {
-            if (m_instances.ContainsKey(namespaceName))
+            if (_instances.ContainsKey(namespaceName))
             {
-                logger.Warn(string.Format("ConfigFactory({0}) is overridden by {1}!", namespaceName, factory.GetType()));
+                Logger().Warn($"ConfigFactory({namespaceName}) is overridden by {factory.GetType()}!");
             }
 
-            m_instances[namespaceName] = factory;
+            _instances[namespaceName] = factory;
 
         }
 
-        public ConfigFactory GetFactory(string namespaceName)
+        public IConfigFactory GetFactory(string namespaceName)
         {
-            ConfigFactory config;
-            m_instances.TryGetValue(namespaceName, out config);
+            _instances.TryGetValue(namespaceName, out var config);
             return config;
         }
     }
