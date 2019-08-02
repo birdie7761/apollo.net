@@ -4,29 +4,29 @@ using System.Text;
 
 namespace Com.Ctrip.Framework.Apollo.Util
 {
-    class ExceptionUtil
+    static class ExceptionUtil
     {
-        public static string GetDetailMessage(Exception ex)
+        public static string GetDetailMessage(this Exception ex)
         {
             if (ex == null || string.IsNullOrEmpty(ex.Message))
             {
                 return string.Empty;
             }
-            StringBuilder builder = new StringBuilder(ex.Message);
+            var builder = new StringBuilder(ex.Message);
             ICollection<Exception> causes = new LinkedList<Exception>();
 
-            int counter = 0;
-            Exception current = ex;
+            var counter = 0;
+            var current = ex;
             //retrieve up to 10 causes
             while (current.InnerException != null && counter < 10)
             {
-                Exception next = current.InnerException;
+                var next = current.InnerException;
                 causes.Add(next);
                 current = next;
                 counter++;
             }
 
-            foreach (Exception cause in causes)
+            foreach (var cause in causes)
             {
                 if (string.IsNullOrEmpty(cause.Message))
                 {
@@ -40,6 +40,5 @@ namespace Com.Ctrip.Framework.Apollo.Util
 
             return builder.ToString();
         }
-
     }
 }

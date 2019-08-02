@@ -8,29 +8,20 @@ namespace Com.Ctrip.Framework.Apollo.Model
     /// </summary>
     public class ConfigChangeEventArgs : EventArgs
     {
-        private readonly string m_namespace;
-        private readonly IDictionary<string, ConfigChange> m_changes;
-
         /// <summary>
         /// Constructor. </summary>
-        /// <param name="namespace"> the namespace of this change </param>
+        /// <param name="namespaceName"> the namespace of this change </param>
         /// <param name="changes"> the actual changes </param>
-        public ConfigChangeEventArgs(string namespaceName, IDictionary<string, ConfigChange> changes)
+        public ConfigChangeEventArgs(string namespaceName, IReadOnlyDictionary<string, ConfigChange> changes)
         {
-            m_namespace = namespaceName;
-            m_changes = changes;
+            Namespace = namespaceName;
+            Changes = changes;
         }
 
         /// <summary>
         /// Get the keys changed. </summary>
         /// <returns> the list of the keys </returns>
-        public ICollection<string> ChangedKeys
-        {
-            get
-            {
-                return m_changes.Keys;
-            }
-        }
+        public IEnumerable<string> ChangedKeys => Changes.Keys;
 
         /// <summary>
         /// Get a specific change instance for the key specified. </summary>
@@ -38,8 +29,7 @@ namespace Com.Ctrip.Framework.Apollo.Model
         /// <returns> the change instance </returns>
         public ConfigChange GetChange(string key)
         {
-            ConfigChange change;
-            m_changes.TryGetValue(key, out change);
+            Changes.TryGetValue(key, out var change);
             return change;
         }
 
@@ -47,20 +37,13 @@ namespace Com.Ctrip.Framework.Apollo.Model
         /// Check whether the specified key is changed </summary>
         /// <param name="key"> the key </param>
         /// <returns> true if the key is changed, false otherwise. </returns>
-        public bool IsChanged(string key)
-        {
-            return m_changes.ContainsKey(key);
-        }
+        public bool IsChanged(string key) => Changes.ContainsKey(key);
 
         /// <summary>
         /// Get the namespace of this change event. </summary>
         /// <returns> the namespace </returns>
-        public string Namespace
-        {
-            get
-            {
-                return m_namespace;
-            }
-        }
+        public string Namespace { get; }
+
+        public IReadOnlyDictionary<string, ConfigChange> Changes { get; }
     }
 }

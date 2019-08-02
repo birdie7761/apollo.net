@@ -5,6 +5,7 @@
 *.suo
 *.user
 *.sln.docstates
+.vs
 
 #Auto Generate files
 __ConfigTemp/
@@ -161,4 +162,3 @@ $RECYCLE.BIN/
 *.csv
 /.vs/slnx.sqlite
 /.vs/slnx.sqlite
-.vs/

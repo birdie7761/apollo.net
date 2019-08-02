@@ -1,40 +1,42 @@
-﻿using Com.Ctrip.Framework.Apollo.Core.Ioc;
-using Com.Ctrip.Framework.Apollo.Spi;
-using System;
-using System.Collections.Concurrent;
+﻿using Com.Ctrip.Framework.Apollo.Spi;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Com.Ctrip.Framework.Apollo.Internals
 {
-    [Named(ServiceType = typeof(ConfigManager))]
-    public class DefaultConfigManager : ConfigManager
+    public class DefaultConfigManager : IConfigManager
     {
-        [Inject]
-        private ConfigFactoryManager m_factoryManager;
-        private IDictionary<string, Config> m_configs = new ConcurrentDictionary<string, Config>();
+        private readonly Dictionary<string, IConfig> _configs = new Dictionary<string, IConfig>();
+        private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
+        private readonly DefaultConfigFactory _configFactory;
 
-        public Config GetConfig(String namespaceName) {
-            Config config;
-            m_configs.TryGetValue(namespaceName, out config);
+        public IConfigRegistry Registry { get; }
 
-            if (config == null)
+        public DefaultConfigManager(IConfigRegistry registry, ConfigRepositoryFactory repositoryFactory)
+        {
+            _configFactory = new DefaultConfigFactory(repositoryFactory);
+            Registry = registry;
+        }
+
+        private IConfigFactory GetFactory(string namespaceName) => Registry.GetFactory(namespaceName) ?? _configFactory;
+
+        public async Task<IConfig> GetConfig(string namespaceName)
+        {
+            if (_configs.TryGetValue(namespaceName, out var config)) return config;
+
+            await _semaphore.WaitAsync().ConfigureAwait(false);
+            try
             {
-                lock (this)
-                {
-                    m_configs.TryGetValue(namespaceName, out config);
-
-                    if (config == null)
-                    {
-                        ConfigFactory factory = m_factoryManager.GetFactory(namespaceName);
-
-                        config = factory.Create(namespaceName);
-                        m_configs[namespaceName] = config;
-                    }
-                }
+                if (!_configs.TryGetValue(namespaceName, out config))
+                    _configs[namespaceName] = config = await GetFactory(namespaceName).Create(namespaceName).ConfigureAwait(false);
+            }
+            finally
+            {
+                _semaphore.Release();
             }
 
             return config;
-
         }
     }
 }
